@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Resources\RecipeResource;
 
+use Symfony\Component\HttpFoundation\Response;
+
 use App\Models\Recipe;
 
 class RecipeController extends Controller
@@ -18,7 +20,16 @@ class RecipeController extends Controller
         return RecipeResource::collection($recipes);
     }
 
-    public function store() { }
+    public function store(Request $request) 
+    {
+        $recipe = Recipe::create($request->all());
+
+        if ($tags = json_decode($request->tags)) {
+            $recipe->tags()->attach($tags);
+        }
+
+        return response()->json(new RecipeResource($recipe), Response::HTTP_CREATED); // HTTP 201
+    }
 
     public function show(Recipe $recipe)
     {
@@ -27,7 +38,21 @@ class RecipeController extends Controller
         return new RecipeResource($recipe);
     }
 
-    public function update() { }
+    public function update(Request $request, Recipe $recipe) 
+    {
+        $recipe->update($request->all());
 
-    public function destroy() { }
+        if ($tags = json_decode($request->tags)) {
+            $recipe->tags()->sync($tags);
+        }
+
+        return response()->json(new RecipeResource($recipe), Response::HTTP_OK); // 200 
+    }
+
+    public function destroy(Recipe $recipe) 
+    {
+        $recipe->delete();
+
+        return response()->json(null, Response::HTTP_NO_CONTENT); // 204
+    }
 }
