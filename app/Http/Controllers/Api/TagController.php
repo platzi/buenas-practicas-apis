@@ -11,11 +11,11 @@ class TagController extends Controller
 {
     public function index()
     {
-        return Tag::all();
+        return Tag::with('recipes')->get();
     }
 
     public function show(Tag $tag)
     {
-        return $tag;
+        return $tag->load('recipes');
     }
 }
