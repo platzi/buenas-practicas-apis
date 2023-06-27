@@ -39,6 +39,8 @@ class RecipeController extends Controller
 
     public function update(UpdateRecipeRequest $request, Recipe $recipe) 
     {
+        $this->authorize('update', $recipe);
+
         $recipe->update($request->all());
 
         if ($tags = json_decode($request->tags)) {
@@ -50,6 +52,8 @@ class RecipeController extends Controller
 
     public function destroy(Recipe $recipe) 
     {
+        $this->authorize('delete', $recipe);
+
         $recipe->delete();
 
         return response()->json(null, Response::HTTP_NO_CONTENT); // 204
