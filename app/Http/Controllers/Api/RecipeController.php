@@ -24,8 +24,8 @@ class RecipeController extends Controller
 
     public function store(StoreRecipeRequest $request) 
     {
-        $recipe = Recipe::create($request->all());
-        $recipe->tags()->attach($tags);
+        $recipe = $request->user()->recipes()->create($request->all());
+        $recipe->tags()->attach(json_decode($request->tags));
 
         return response()->json(new RecipeResource($recipe), Response::HTTP_CREATED); // HTTP 201
     }
