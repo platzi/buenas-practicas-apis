@@ -24,7 +24,7 @@ class RecipeResource extends JsonResource
                 'description'   => $this->description,
                 'ingredients'   => $this->ingredients,
                 'instructions'  => $this->instructions,
-                'image'         => $this->image,
+                'image'         => asset($this->image), // folder/file.png -> http://.../folder/file.png
                 'tags'          => $this->tags->pluck('name')->implode(', '),
             ],
         ];
